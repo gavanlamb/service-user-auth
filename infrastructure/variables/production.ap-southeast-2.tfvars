@@ -1,0 +1,5 @@
+﻿environment="Production"
+region="ap-southeast-2"
+base_domain_name="expensely.co"
+cognito_user_pool_name="expensely"
+cognito_from_email_address="hello@expensely.co"
