@@ -99,7 +99,7 @@ resource "aws_route53_record" "auth" {
 data "aws_acm_certificate" "wildcard" {
   provider = aws.us-east-1
 
-  domain = "*.${var.base_domain_name}"
+  domain = var.base_domain_name
   statuses = ["ISSUED"]
 }
 
