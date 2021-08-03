@@ -82,7 +82,7 @@
 resource "aws_cognito_user_pool_domain" "expensely" {
   domain = local.domain
   user_pool_id = aws_cognito_user_pool.expensely.id
-  certificate_arn = aws_acm_certificate.auth.arn
+  certificate_arn = data.aws_acm_certificate.wildcard.arn
 }
 resource "aws_route53_record" "auth" {
   name = aws_cognito_user_pool_domain.expensely.domain
@@ -96,42 +96,10 @@ resource "aws_route53_record" "auth" {
   }
 }
 
-resource "aws_acm_certificate" "auth" {
+data "aws_acm_certificate" "wildcard" {
   provider = aws.us-east-1
 
-  domain_name       = local.domain
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = merge(
-  local.default_tags,
-  {
-    Name = local.domain
-  }
-  )
+  domain = "*.${var.base_domain_name}"
+  statuses = ["ISSUED"]
 }
-resource "aws_acm_certificate_validation" "auth" {
-  provider = aws.us-east-1
-  certificate_arn         = aws_acm_certificate.auth.arn
-  validation_record_fqdns = [for record in aws_route53_record.auth_validation : record.fqdn]
-}
-resource "aws_route53_record" "auth_validation" {
-  provider = aws.us-east-1
-  for_each = {
-    for dvo in aws_acm_certificate.auth.domain_validation_options : dvo.domain_name => {
-      name = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type = dvo.resource_record_type
-    }
-  }
 
-  allow_overwrite = true
-  name = each.value.name
-  records = [each.value.record]
-  ttl = 60
-  type = each.value.type
-  zone_id = data.aws_route53_zone.zone.zone_id
-}
