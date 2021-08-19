@@ -18,6 +18,7 @@ parameters:
 jobs:
   - job: add_cognito_users
     displayName: Add cognito users
+    dependsOn: apply
     steps:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
