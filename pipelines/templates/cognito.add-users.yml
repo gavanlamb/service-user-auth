@@ -1,0 +1,42 @@
+parameters:
+  - name: serviceConnectionName
+    displayName: Name of the AWS service connection to use
+    type: string
+  - name: region
+    displayName: Name of the AWS region
+    type: string
+  - name: environment
+    displayName: Name of the environment
+    type: string
+  - name: domain
+    displayName: Name of domain to create users for
+    type: string
+  - name: cognitoUserPoolId
+    displayName: ID of the cognito user pool
+    type: string
+
+jobs:
+  - job: add_cognito_users
+    displayName: Add cognito users
+    dependsOn: apply
+    steps:
+      - task: CloudFormationCreateOrUpdateStack@1
+        displayName: Add cognito users
+        inputs:
+          awsCredentials: '${{ parameters.serviceConnectionName }}'
+          regionName: '${{ parameters.region }}'
+          stackName: 'expensely-${{ parameters.environment }}-cognito-users'
+          templateSource: 'file'
+          templateFile: '$(Build.SourcesDirectory)/infrastructure/users.yaml'
+          templateParametersSource: 'inline'
+          templateParameters: |
+            [
+              {
+                "ParameterKey":"CognitoUserPoolId",
+                "ParameterValue":"${{ parameters.cognitoUserPoolId }}"
+              },
+              {
+                "ParameterKey":"Domain",
+                "ParameterValue":"${{ parameters.domain }}"
+              }
+            ]

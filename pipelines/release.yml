@@ -37,3 +37,10 @@ stages:
           stateBucketName: $(terraformStateBucketName)
           stateLockTableName: $(terraformStateLockTableName)
           region: $(region)
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: production
+          serviceConnectionName: ${{ variables.awsServiceConnectionName }}
+          region: $(region)
+          domain: expensely.io
+          cognitoUserPoolId: ap-southeast-2_hZFRO90Xw
