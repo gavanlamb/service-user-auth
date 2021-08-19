@@ -1,0 +1,232 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Stack for cognito
+Parameters:
+  CognitoUserPoolId:
+    Type: String
+    Description: ID of the cognito user pool
+  Domain:
+    Type: String
+    Description: Domain to use for email addresses
+Resources:
+  User0:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user0@${Domain}
+        - Name: given_name
+          Value: Karl
+        - Name: family_name
+          Value: Hunt
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user0@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User1:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user1@${Domain}
+        - Name: given_name
+          Value: Bill
+        - Name: family_name
+          Value: Bryant
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user1@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User2:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user2@${Domain}
+        - Name: given_name
+          Value: Tina
+        - Name: family_name
+          Value: Lewis
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user2@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User3:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user3@${Domain}
+        - Name: given_name
+          Value: Armando
+        - Name: family_name
+          Value: Willis
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user3@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User4:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user4@${Domain}
+        - Name: given_name
+          Value: Lee
+        - Name: family_name
+          Value: Carr
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user4@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User5:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user5@${Domain}
+        - Name: given_name
+          Value: Alan
+        - Name: family_name
+          Value: Brown
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user5@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User6:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user6@${Domain}
+        - Name: given_name
+          Value: Rita
+        - Name: family_name
+          Value: Peters
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user6@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User7:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user7@${Domain}
+        - Name: given_name
+          Value: Cherly
+        - Name: family_name
+          Value: Carroll
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user7@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User8:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user8@${Domain}
+        - Name: given_name
+          Value: Jean
+        - Name: family_name
+          Value: Warren
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user8@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User9:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user9@${Domain}
+        - Name: given_name
+          Value: Arthur
+        - Name: family_name
+          Value: Gardner
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user9@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  User10:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+        - EMAIL
+      UserAttributes:
+        - Name: email
+          Value: !Sub user10@${Domain}
+        - Name: given_name
+          Value: Milton
+        - Name: family_name
+          Value: Ruiz
+        - Name: phone_number
+          Value: '+61406000000'
+        - Name: email_verified
+          Value: true
+        - Name: phone_number_verified
+          Value: true
+      Username: !Sub user10@${Domain}
+      UserPoolId: !Ref CognitoUserPoolId
+  
