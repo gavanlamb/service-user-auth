@@ -21,12 +21,13 @@ jobs:
     dependsOn: apply
     steps:
       - task: CloudFormationCreateOrUpdateStack@1
+        displayName: Add cognito users
         inputs:
           awsCredentials: '${{ parameters.serviceConnectionName }}'
           regionName: '${{ parameters.region }}'
           stackName: 'expensely-${{ parameters.environment }}-cognito-users'
           templateSource: 'file'
-          templateFile: 'users.yaml'
+          templateFile: '$(Build.SourcesDirectory)/infrastructure/users.yaml'
           templateParametersSource: 'inline'
           templateParameters: |
             [
