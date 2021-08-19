@@ -37,7 +37,7 @@ stages:
           stateBucketName: $(terraformStateBucketName)
           stateLockTableName: $(terraformStateLockTableName)
           region: $(region)
-      - template: templates/release.environment.yml
+      - template: templates/cognito.add-users.yml
         parameters:
           environment: production
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
