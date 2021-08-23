@@ -174,3 +174,51 @@ resource "aws_cognito_user_pool_client" "expensely_app" {
     "given_name",
     "phone_number"]
 }
+
+resource "aws_cognito_user_pool_client" "postman" {
+  name = "postman"
+
+  user_pool_id = aws_cognito_user_pool.expensely.id
+
+  access_token_validity = 1
+  id_token_validity = 1
+  refresh_token_validity = 30
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_flows = [
+    "code"
+  ]
+  allowed_oauth_scopes = concat(
+    [
+      "phone",
+      "email",
+      "openid",
+      "profile"
+    ],
+    aws_cognito_resource_server.time.scope_identifiers
+  )
+  callback_urls = [
+    "https://localhost"]
+  default_redirect_uri = "https://localhost"
+  enable_token_revocation = true
+  explicit_auth_flows = [
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
+  generate_secret = false
+  logout_urls = [
+    "https://localhost/logout.html"]
+  prevent_user_existence_errors = "ENABLED"
+  read_attributes = [
+    "email",
+    "family_name",
+    "given_name",
+    "phone_number"]
+  supported_identity_providers = [
+    "COGNITO"]
+  write_attributes = [
+    "email",
+    "family_name",
+    "given_name",
+    "phone_number"]
+}
+
