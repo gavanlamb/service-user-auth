@@ -12,10 +12,6 @@ variable "cognito_from_email_address" {
   type = string
 }
 
-variable "base_domain_name" {
-  type = string
-}
-
 variable "cognito_resource_time_identifier" {
   type = string
 }
@@ -24,7 +20,7 @@ variable "cognito_client_app_domain" {
 }
 
 locals {
-  domain = "auth.${var.base_domain_name}"
+  domain = "auth.${var.cognito_client_app_domain}"
   default_tags = {
     Application = "Expensely"
     Team = "Expensely Core"

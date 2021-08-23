@@ -25,8 +25,30 @@ pr:
       - '*'
 
 stages:
-  - stage: Production
+  - stage: preview
+    displayName: Preview
+    dependsOn: []
+    variables:
+      - template: variables/production.ap-southeast-2.yml@expensely-templates
+    jobs:
+      - template: templates/release.environment.yml
+        parameters:
+          environment: preview
+          serviceConnectionName: ${{ variables.terraformServiceConnectionName }}
+          stateBucketName: $(terraformStateBucketName)
+          stateLockTableName: $(terraformStateLockTableName)
+          region: $(region)
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: preview
+          serviceConnectionName: ${{ variables.awsServiceConnectionName }}
+          region: $(region)
+          domain: expensely.io
+          cognitoUserPoolId: ap-southeast-2_hZFRO90Xw
+
+  - stage: production
     displayName: Production
+    dependsOn: []
     variables:
       - template: variables/production.ap-southeast-2.yml@expensely-templates
     jobs:
