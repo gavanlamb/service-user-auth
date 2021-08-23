@@ -103,3 +103,74 @@ data "aws_acm_certificate" "wildcard" {
   statuses = ["ISSUED"]
 }
 
+resource "aws_cognito_resource_server" "time" {
+  identifier = var.cognito_resource_time_identifier
+  name = "time"
+
+  scope {
+    scope_name = "time:create"
+    scope_description = "Permission to create records for Time API"
+  }
+  scope {
+    scope_name = "time:delete"
+    scope_description = "Permission to delete records for Time API"
+  }
+  scope {
+    scope_name = "time:read"
+    scope_description = "Permission to read records for Time API"
+  }
+  scope {
+    scope_name = "time:update"
+    scope_description = "Permission to update records for Time API"
+  }
+
+  user_pool_id = aws_cognito_user_pool.expensely.id
+}
+
+//Apps
+resource "aws_cognito_user_pool_client" "expensely_app" {
+  name = "expensely - app"
+
+  user_pool_id = aws_cognito_user_pool.expensely.id
+
+  access_token_validity = 1
+  id_token_validity = 1
+  refresh_token_validity = 30
+  allowed_oauth_flows_user_pool_client = true
+  allowed_oauth_flows = [
+    "code"
+  ]
+  allowed_oauth_scopes = concat(
+    [
+      "phone",
+      "email",
+      "openid",
+      "profile"
+    ],
+    aws_cognito_resource_server.time.scope_identifiers
+  )
+  callback_urls = [
+    "https://${var.cognito_client_app_domain}/index.html"]
+  default_redirect_uri = "https://${var.cognito_client_app_domain}/index.html"
+  enable_token_revocation = true
+  explicit_auth_flows = [
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
+  generate_secret = false
+  logout_urls = [
+    "https://${var.cognito_client_app_domain}/logout.html"]
+  prevent_user_existence_errors = "ENABLED"
+  read_attributes = [
+    "email",
+    "family_name",
+    "given_name",
+    "phone_number"]
+  supported_identity_providers = [
+    "COGNITO"]
+  write_attributes = [
+    "email",
+    "family_name",
+    "given_name",
+    "phone_number"]
+}

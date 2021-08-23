@@ -16,6 +16,13 @@ variable "base_domain_name" {
   type = string
 }
 
+variable "cognito_resource_time_identifier" {
+  type = string
+}
+variable "cognito_client_app_domain" {
+  type = string
+}
+
 locals {
   domain = "auth.${var.base_domain_name}"
   default_tags = {
