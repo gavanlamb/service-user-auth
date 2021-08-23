@@ -1,6 +1,6 @@
 data "aws_route53_zone" "expensely" {
-  name = var.base_domain_name
+  name = var.cognito_client_app_domain
 }
 data "aws_route53_zone" "zone" {
-  name = "${var.base_domain_name}."
+  name = "${var.cognito_client_app_domain}."
 }
