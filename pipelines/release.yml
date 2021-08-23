@@ -43,8 +43,8 @@ stages:
           environment: preview
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
           region: $(region)
-          domain: expensely.io
-          cognitoUserPoolId: ap-southeast-2_hZFRO90Xw
+          domain: preview.expensely.io
+          cognitoUserPoolId: ap-southeast-2_eAsexsETG
 
   - stage: production
     displayName: Production
