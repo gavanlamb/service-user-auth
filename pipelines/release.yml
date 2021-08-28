@@ -29,18 +29,18 @@ stages:
     displayName: Preview
     dependsOn: []
     variables:
-      - template: variables/production.ap-southeast-2.yml@expensely-templates
+      - template: variables/preview.ap-southeast-2.yml@expensely-templates
     jobs:
       - template: templates/release.environment.yml
         parameters:
-          environment: preview
+          environment: $(environment)
           serviceConnectionName: ${{ variables.terraformServiceConnectionName }}
           stateBucketName: $(terraformStateBucketName)
           stateLockTableName: $(terraformStateLockTableName)
           region: $(region)
       - template: templates/cognito.add-users.yml
         parameters:
-          environment: preview
+          environment: $(environment)
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
           region: $(region)
           domain: preview.expensely.io
@@ -54,14 +54,14 @@ stages:
     jobs:
       - template: templates/release.environment.yml
         parameters:
-          environment: production
+          environment: $(environment)
           serviceConnectionName: ${{ variables.terraformServiceConnectionName }}
           stateBucketName: $(terraformStateBucketName)
           stateLockTableName: $(terraformStateLockTableName)
           region: $(region)
       - template: templates/cognito.add-users.yml
         parameters:
-          environment: production
+          environment: $(environment)
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
           region: $(region)
           domain: expensely.io
