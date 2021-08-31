@@ -11,6 +11,7 @@ parameters:
   - name: domain
     displayName: Name of domain to create users for
     type: string
+    default: expensely.io
   - name: cognitoUserPoolId
     displayName: ID of the cognito user pool
     type: string

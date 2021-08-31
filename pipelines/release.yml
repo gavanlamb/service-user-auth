@@ -43,7 +43,6 @@ stages:
           environment: ${{ variables.environment }}
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
           region: ${{ variables.region }}
-          domain: preview.expensely.io
           cognitoUserPoolId: ap-southeast-2_eAsexsETG
 
   - stage: production
@@ -64,5 +63,4 @@ stages:
           environment: ${{ variables.environment }}
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
           region: ${{ variables.region }}
-          domain: expensely.io
           cognitoUserPoolId: ap-southeast-2_hZFRO90Xw
