@@ -12,10 +12,10 @@ variable "cognito_from_email_address" {
   type = string
 }
 
-variable "cognito_resource_time_identifier" {
+variable "cognito_client_app_domain" {
   type = string
 }
-variable "cognito_client_app_domain" {
+variable "cognito_configuration_set" {
   type = string
 }
 

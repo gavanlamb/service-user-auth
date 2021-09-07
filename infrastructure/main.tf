@@ -65,15 +65,16 @@
   }
   
   email_configuration {
-    email_sending_account = "COGNITO_DEFAULT"
-//    email_sending_account = "DEVELOPER"
-//    from_email_address = var.cognito_from_email_address
-//    reply_to_email_address = var.cognito_from_email_address
+    email_sending_account = "DEVELOPER"
+    source_arn = "arn:aws:ses:us-east-1:${data.aws_caller_identity.current.id}:identity/${var.cognito_from_email_address}"
+    configuration_set = var.cognito_configuration_set
+    from_email_address = "Expensely No-Reply <${var.cognito_from_email_address}>"
+    reply_to_email_address = var.cognito_from_email_address
   }
   verification_message_template {
     default_email_option = "CONFIRM_WITH_CODE"
-    email_subject_by_link = "Verify your Expensely account"
-    email_message_by_link = "{##Click Here##} to verify your account."
+    email_subject = "Verify your Expensely account"
+    email_message = "Your verification code is {####}. "
   }
 
   tags = local.default_tags

@@ -1,6 +1,6 @@
 ﻿environment="Production"
 region="ap-southeast-2"
 cognito_user_pool_name="expensely"
-cognito_from_email_address="hello@expensely.app"
-cognito_resource_time_identifier="https://time.expensely.io"
+cognito_from_email_address="no-reply@expensely.app"
 cognito_client_app_domain="expensely.app"
+cognito_configuration_set="expensely-production"
