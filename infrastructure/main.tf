@@ -9,6 +9,7 @@
     name = "email"
     attribute_data_type = "String"
     required = true
+    mutable = true
     string_attribute_constraints {
       min_length = 4
       max_length = 254
@@ -18,6 +19,7 @@
     name = "given_name"
     attribute_data_type = "String"
     required = true
+    mutable = true
     string_attribute_constraints {
       min_length = 1
       max_length = 100
@@ -27,6 +29,7 @@
     name = "family_name"
     attribute_data_type = "String"
     required = true
+    mutable = true
     string_attribute_constraints {
       min_length = 1
       max_length = 100
