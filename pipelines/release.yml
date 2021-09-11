@@ -43,7 +43,7 @@ stages:
           environment: ${{ variables.environment }}
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
           region: ${{ variables.region }}
-          cognitoUserPoolId: ap-southeast-2_eAsexsETG
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
 
   - stage: production
     displayName: Production
@@ -63,4 +63,4 @@ stages:
           environment: ${{ variables.environment }}
           serviceConnectionName: ${{ variables.awsServiceConnectionName }}
           region: ${{ variables.region }}
-          cognitoUserPoolId: ap-southeast-2_hZFRO90Xw
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
