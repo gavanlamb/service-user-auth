@@ -22,7 +22,7 @@ jobs:
       - template: aws/terraform/plan.yml@templates
         parameters:
           artifactName: ${{ parameters.environment }}_${{ parameters.region }}
-          planAdditionalCommandOptions: '-var-file=variables/${{ parameters.environment }}.${{ parameters.region }}.tfvars'
+          planAdditionalCommandOptions: '-var-file=variables/${{ parameters.environment }}.${{ parameters.region }}.tfvars -var="lambda_version=$(Build.BuildNumber)"'
           serviceConnectionName: ${{ parameters.serviceConnectionName }}
           stateBucketName: ${{ parameters.stateBucketName }}
           stateLockTableName: ${{ parameters.stateLockTableName }}
