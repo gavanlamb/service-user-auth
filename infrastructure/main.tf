@@ -122,6 +122,7 @@ resource "aws_lambda_function" "custom_message" {
     variables = {
       ENVIRONMENT = var.environment
       PACKAGE_VERSION = var.lambda_version
+      TABLE_NAME = aws_dynamodb_table.custom_message.name
     }
   }
 }
@@ -179,6 +180,10 @@ resource "aws_dynamodb_table" "custom_message" {
   lifecycle {
     prevent_destroy = true
   }
+}
+resource "aws_iam_role_policy_attachment" "custom_message_dynamodb" {
+  role = aws_iam_role.custom_message.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess"
 }
 
 // Cloudwatch
