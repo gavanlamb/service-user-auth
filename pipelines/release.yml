@@ -30,8 +30,7 @@ stages:
       - job: setup
         displayName: Setup
         steps:
-          - script: echo "##vso[build.updatebuildnumber]1.0.$(build.buildid).$(System.StageAttempt)"
-            displayName: Set build identifier
+          - template: templates/build.number.yml
 
       - job: custom_message
         displayName: Custom message
