@@ -32,8 +32,8 @@ jobs:
       dependsOn: plan
       timeoutInMinutes: 60
       notifyUsers: '[Expensely]\Expensely Team'
-  - deployment: apply
-    displayName: Apply
+  - deployment: deploy
+    displayName: Deploy
     dependsOn: approve
     environment: ${{ parameters.environment }}
     strategy:
@@ -41,7 +41,7 @@ jobs:
         deploy:
           steps:
             - download: current
-              artifact: custom-message@$(Build.BuildNumber).zip
+              artifact: 'custom-message@$(Build.BuildNumber).zip'
             - template: aws/terraform/apply.yml@templates
               parameters:
                 artifactName: ${{ parameters.environment }}_${{ parameters.region }}
