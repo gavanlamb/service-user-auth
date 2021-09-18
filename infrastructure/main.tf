@@ -114,7 +114,7 @@ data "aws_acm_certificate" "wildcard" {
 // Lambda
 /// Custom message
 resource "aws_lambda_function" "custom_message" {
-  filename = local.custom_message_name
+  filename = local.custom_message_filename
   function_name = local.custom_message_name
   role = aws_iam_role.custom_message.arn
   handler = "app.handler"
