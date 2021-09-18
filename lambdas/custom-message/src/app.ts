@@ -8,7 +8,10 @@ import {
   CustomMessageVerifyUserAttributeTriggerEvent
 } from "aws-lambda";
 
-import {getDefaultUri} from "./services/cognito";
+import { getDefaultUri } from "./services/cognito";
+import { getMessageTemplateOrDefault } from "./services/dynamo";
+import { compile } from "handlebars";
+import {applyTemplate} from "./services/template";
 
 export const handler = async (
   event: CustomMessageAdminCreateUserTriggerEvent
@@ -25,22 +28,13 @@ export const handler = async (
   | CustomMessageSignUpTriggerEvent
   | CustomMessageUpdateUserAttributeTriggerEvent
   | CustomMessageVerifyUserAttributeTriggerEvent> => {
-  console.log(JSON.stringify(event));
 
-  switch (event.triggerSource){
-    case "CustomMessage_SignUp":
-      const baseUrl = await getDefaultUri(event.callerContext.clientId, event.userPoolId);
-      const url = `${baseUrl}/auth/verify?verificationCode=${event.request.codeParameter}&sub=${event.userName}`
+  const baseUrl = await getDefaultUri(event.callerContext.clientId, event.userPoolId);
 
-      // Get value from Dynamo
-      // Replace the url template with the value above
-      // return
-
-      event.response.smsMessage = event.request.codeParameter;
-      event.response.emailSubject = "Verify your account";
-      event.response.emailMessage = url;
-      break;
-  }
+  const dynamoRecord = await getMessageTemplateOrDefault(event.triggerSource, 'default');
+  event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, baseUrl, event);
+  event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, baseUrl, event);
+  event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, baseUrl, event);
 
   return event;
 };
