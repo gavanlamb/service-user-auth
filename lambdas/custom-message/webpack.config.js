@@ -8,7 +8,7 @@ module.exports = () => {
     return {
         context: path.join(__dirname, "dist"),
         mode: 'production',
-        entry: "./index.js",
+        entry: "./app.js",
         optimization: {
             minimize: false
         },
@@ -18,7 +18,7 @@ module.exports = () => {
         output: {
             libraryTarget: 'commonjs',
             path: path.join(__dirname, 'webpack'),
-            filename: 'index.js',
+            filename: 'app.js',
         },
         target: 'node',
         plugins: [
