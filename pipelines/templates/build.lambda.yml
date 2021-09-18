@@ -1,0 +1,29 @@
+parameters:
+  - name: lambdaName
+    displayName: Name of the Lambda to build and publish
+    type: string
+
+steps:
+  - task: NodeTool@0
+    displayName: Install Node 14.17.6
+    inputs:
+      versionSpec: '14.17.6'
+  - task: Npm@1
+    displayName: Restore
+    inputs:
+      command: 'ci'
+      workingDir: '$(Build.SourcesDirectory)/lambdas/${{ parameters.lambdaName }}'
+  - task: Npm@1
+    displayName: Build
+    inputs:
+      command: 'custom'
+      workingDir: '$(Build.SourcesDirectory)/lambdas/${{ parameters.lambdaName }}'
+      customCommand: 'run build'
+    env:
+      BUILD_NUMBER: $(Build.BuildNumber)
+  - task: PublishBuildArtifacts@1
+    displayName: Publish
+    inputs:
+      PathtoPublish: '$(Build.SourcesDirectory)/lambdas/${{ parameters.lambdaName }}/webpack/${{ parameters.lambdaName }}@$(Build.BuildNumber).zip'
+      ArtifactName: '${{ parameters.lambdaName }}@$(Build.BuildNumber).zip'
+      publishLocation: 'Container'

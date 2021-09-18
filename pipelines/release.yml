@@ -1,4 +1,3 @@
-name: 1.0$(Rev:.r)
 resources:
   repositories:
     - repository: templates
@@ -24,7 +23,27 @@ pr:
     include:
       - '*'
 
+lockBehavior: runLatest
 stages:
+  - stage: build
+    displayName: Build
+    variables:
+      - template: variables/preview.ap-southeast-2.yml@expensely-templates
+    jobs:
+      - job: setup
+        displayName: Setup
+        steps:
+          - script: echo "##vso[build.updatebuildnumber]1.0.$(build.buildid).$(System.StageAttempt)"
+            displayName: Set build identifier
+
+      - job: custom_message
+        displayName: Custom message
+        dependsOn: setup
+        steps:
+          - template: templates/build.lambda.yml
+            parameters:
+              lambdaName: custom-message
+
   - stage: preview
     displayName: Preview
     dependsOn: []
