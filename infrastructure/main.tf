@@ -106,8 +106,9 @@ data "aws_acm_certificate" "wildcard" {
     "ISSUED"]
 }
 
-// Lambda
-/// Custom message
+
+// Custom message
+/// Lambda
 resource "aws_lambda_function" "custom_message" {
   filename = local.custom_message_filename
   function_name = local.custom_message_name
@@ -158,8 +159,29 @@ resource "aws_iam_role_policy_attachment" "custom_message_cognito" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoReadOnly"
 }
 
+/// DynamoDB
+resource "aws_dynamodb_table" "custom_message" {
+  name = local.custom_message_name
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "MessageType"
+  range_key = "Organisation"
 
-/// Cloudwatch
+  attribute {
+    name = "MessageType"
+    type = "S"
+  }
+
+  attribute {
+    name = "Organisation"
+    type = "S"
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+// Cloudwatch
 resource "aws_iam_policy" "lambda_cloudwatch" {
   name        = "xact-processor-lambda-logging-${var.environment}"
   description = "IAM policy for logging from a lambda"
