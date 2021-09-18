@@ -1,11 +1,3 @@
-// Lookup message in dynamo
-
-// Replace template values
-
-// Set value
-
-// Finish
-
 import {
   CustomMessageAdminCreateUserTriggerEvent,
   CustomMessageAuthenticationTriggerEvent,
@@ -16,8 +8,7 @@ import {
   CustomMessageVerifyUserAttributeTriggerEvent
 } from "aws-lambda";
 
-import { CognitoIdentityServiceProvider } from "aws-sdk";
-import {DescribeUserPoolClientRequest} from "aws-sdk/clients/cognitoidentityserviceprovider";
+import {getDefaultUri} from "./services/cognito";
 
 export const handler = async (
   event: CustomMessageAdminCreateUserTriggerEvent
@@ -36,20 +27,20 @@ export const handler = async (
   | CustomMessageVerifyUserAttributeTriggerEvent> => {
   console.log(JSON.stringify(event));
 
-  // Get client url TODO ADD IAM PERMISSIONS
-  const client = new CognitoIdentityServiceProvider();
-  const params: DescribeUserPoolClientRequest = {
-    ClientId:  event.callerContext.clientId,
-    UserPoolId:  event.userPoolId
+  switch (event.triggerSource){
+    case "CustomMessage_SignUp":
+      const baseUrl = await getDefaultUri(event.callerContext.clientId, event.userPoolId);
+      const url = `${baseUrl}/auth/verify?verificationCode=${event.request.codeParameter}&sub=${event.userName}`
+
+      // Get value from Dynamo
+      // Replace the url template with the value above
+      // return
+
+      event.response.smsMessage = event.request.codeParameter;
+      event.response.emailSubject = "Verify your account";
+      event.response.emailMessage = url;
+      break;
   }
-  const t = await client.describeUserPoolClient(params).promise();
-  console.log(JSON.stringify(t));
-
-
-  const userId = event.userName;
-  event.response.smsMessage = event.request.codeParameter;
-  event.response.emailSubject = event.request.codeParameter;
-  event.response.emailMessage = event.request.codeParameter;
 
   return event;
 };
