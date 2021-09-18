@@ -163,8 +163,8 @@ resource "aws_iam_role_policy_attachment" "custom_message_cognito" {
 resource "aws_dynamodb_table" "custom_message" {
   name = local.custom_message_name
   billing_mode = "PAY_PER_REQUEST"
-  hash_key = "MessageType"
-  range_key = "Organisation"
+  hash_key = "Organisation"
+  range_key = "MessageType"
 
   attribute {
     name = "MessageType"
