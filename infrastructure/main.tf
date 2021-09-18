@@ -82,7 +82,7 @@
   }
 
   lambda_config {
-    custom_message = aws_lambda_function.custom_message.invoke_arn
+    custom_message = aws_lambda_function.custom_message.arn
   }
 }
 
@@ -125,7 +125,6 @@ resource "aws_lambda_function" "custom_message" {
   environment {
     variables = {
       ENVIRONMENT = var.environment
-      SERVICE_NAME = "xact-processor"
       PACKAGE_VERSION = var.lambda_version
     }
   }
