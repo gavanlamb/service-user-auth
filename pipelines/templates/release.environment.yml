@@ -41,7 +41,7 @@ jobs:
         deploy:
           steps:
             - download: current
-              artifact: 'custom-message@$(Build.BuildNumber).zip'
+              artifact: custom-message
             - template: aws/terraform/apply.yml@templates
               parameters:
                 artifactName: ${{ parameters.environment }}_${{ parameters.region }}

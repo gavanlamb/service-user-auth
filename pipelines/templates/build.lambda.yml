@@ -25,5 +25,5 @@ steps:
     displayName: Publish
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/lambdas/${{ parameters.lambdaName }}/webpack/${{ parameters.lambdaName }}@$(Build.BuildNumber).zip'
-      ArtifactName: '${{ parameters.lambdaName }}@$(Build.BuildNumber).zip'
+      ArtifactName: '${{ parameters.lambdaName }}'
       publishLocation: 'Container'
