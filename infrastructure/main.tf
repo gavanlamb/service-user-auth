@@ -75,11 +75,6 @@
     from_email_address = "Expensely No-Reply <${var.cognito_from_email_address}>"
     reply_to_email_address = var.cognito_from_email_address
   }
-  verification_message_template {
-    default_email_option = "CONFIRM_WITH_CODE"
-    email_subject = "Verify your Expensely account"
-    email_message = "Your verification code is {####}. "
-  }
 
   lambda_config {
     custom_message = aws_lambda_function.custom_message.arn
@@ -155,9 +150,14 @@ resource "aws_iam_role" "custom_message" {
 EOF
 }
 resource "aws_iam_role_policy_attachment" "custom_message_cloudwatch" {
-  role       = aws_iam_role.custom_message.name
+  role = aws_iam_role.custom_message.name
   policy_arn = aws_iam_policy.lambda_cloudwatch.arn
 }
+resource "aws_iam_role_policy_attachment" "custom_message_cognito" {
+  role = aws_iam_role.custom_message.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoReadOnly"
+}
+
 
 /// Cloudwatch
 resource "aws_iam_policy" "lambda_cloudwatch" {
