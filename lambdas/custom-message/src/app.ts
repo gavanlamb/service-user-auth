@@ -31,9 +31,9 @@ export const handler = async (
   logger.debug(
     {
       event,
-      template: "Event received for: %s"
+      template: "Event received for:%s"
     },
-    "Event received for: %s",
+    "Event received for:%s",
     event.triggerSource
   )
 
@@ -47,9 +47,9 @@ export const handler = async (
   logger.debug(
     {
       event,
-      template: "Returning Event for: %s"
+      template: "Returning Event for:%s"
     },
-    "Returning Event for: %s",
+    "Returning Event for:%s",
     event.triggerSource
   )
   return event;

@@ -10,9 +10,9 @@ const getDefaultUri = async (
     {
       clientId,
       userPoolId,
-      template: "Getting default URI for user pool: %s and client id: %s"
+      template: "Getting default URI for user pool:%s and client id:%s"
     },
-    "Getting default URI for user pool: %s and client id: %s",
+    "Getting default URI for user pool:%s and client id:%s",
     clientId,
     userPoolId
   )
@@ -29,9 +29,9 @@ const getDefaultUri = async (
     {
       clientId,
       userPoolId,
-      template: "Returning default URI: %s for user pool: %s and client id: %s"
+      template: "Returning default URI:%s for user pool:%s and client id:%s"
     },
-    "Returning default URI: %s for user pool: %s and client id: %s",
+    "Returning default URI:%s for user pool:%s and client id:%s",
     defaultUri,
     clientId,
     userPoolId
