@@ -77,7 +77,7 @@
   }
 
   lambda_config {
-    custom_message = aws_lambda_function.custom_message.arn
+    custom_message = aws_lambda_function.custom_message.qualified_arn
   }
 }
 
@@ -123,14 +123,21 @@ resource "aws_lambda_function" "custom_message" {
       ENVIRONMENT = var.environment
       PACKAGE_VERSION = var.lambda_version
       TABLE_NAME = aws_dynamodb_table.custom_message.name
+      SERVICE_NAME = "Cognito custom message Lambda"
+      LOG_LEVEL = var.custom_message_log_level
+      DEFAULT_URI = var.custom_message_default_uri
     }
   }
 }
 resource "aws_lambda_permission" "custom_message" {
-  principal     = "cognito-idp.amazonaws.com"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.custom_message.arn
-  source_arn    = aws_cognito_user_pool.expensely.arn
+  principal = "cognito-idp.amazonaws.com"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.custom_message.function_name
+  source_arn = aws_cognito_user_pool.expensely.arn
+  qualifier = aws_lambda_function.custom_message.version
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role" "custom_message" {
@@ -158,6 +165,11 @@ resource "aws_iam_role_policy_attachment" "custom_message_cloudwatch" {
 resource "aws_iam_role_policy_attachment" "custom_message_cognito" {
   role = aws_iam_role.custom_message.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoReadOnly"
+}
+
+resource "aws_cloudwatch_log_group" "custom_message" {
+  name = "/aws/lambda/${aws_lambda_function.custom_message.function_name}"
+  retention_in_days = 14
 }
 
 /// DynamoDB
@@ -188,7 +200,7 @@ resource "aws_iam_role_policy_attachment" "custom_message_dynamodb" {
 
 // Cloudwatch
 resource "aws_iam_policy" "lambda_cloudwatch" {
-  name        = "xact-processor-lambda-logging-${var.environment}"
+  name = "xact-processor-lambda-logging-${var.environment}"
   description = "IAM policy for logging from a lambda"
 
   policy = <<EOF

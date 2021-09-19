@@ -23,6 +23,13 @@ variable "lambda_version" {
   type = string
 }
 
+variable "custom_message_default_uri" {
+  type = string
+}
+variable "custom_message_log_level" {
+  type = string
+}
+
 locals {
   domain = "auth.${var.cognito_client_app_domain}"
   custom_message_name = "${var.cognito_user_pool_name}-cognito-custom-message"
