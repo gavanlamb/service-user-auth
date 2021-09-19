@@ -1,17 +1,8 @@
-const packageVersion = process.env.PACKAGE_VERSION as string;
-const environment = process.env.ENVIRONMENT as string;
-const serviceName = process.env.SERVICE_NAME as string;
-const memorySize = process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE as string;
-const region = process.env.AWS_REGION as string;
-const runtime = process.env.AWS_EXECUTION_ENV as string;
-const lambdaFunctionVersion = process.env.AWS_LAMBDA_FUNCTION_VERSION as string;
-const logLevel = (process.env.LOG_LEVEL || 'debug') as string;
-
 import pino from 'pino-lambda';
 
 const parentLogger = pino({
-  name: serviceName,
-  level: logLevel,
+  name: process.env.SERVICE_NAME as string,
+  level: process.env.LOG_LEVEL as string,
   formatters: {
     level(level: any) {
       return { level };
@@ -20,11 +11,11 @@ const parentLogger = pino({
 });
 
 const logger = parentLogger.child({
-  packageVersion,
-  environment,
-  memorySize,
-  region,
-  runtime,
-  lambdaFunctionVersion,
+  packageVersion: process.env.PACKAGE_VERSION as string,
+  environment: process.env.ENVIRONMENT as string,
+  memorySize: process.env.AWS_LAMBDA_FUNCTION_MEMORY_SIZE as string,
+  region: process.env.AWS_REGION as string,
+  runtime: process.env.AWS_EXECUTION_ENV as string,
+  lambdaFunctionVersion: process.env.AWS_LAMBDA_FUNCTION_VERSION as string,
 });
 export default logger;
