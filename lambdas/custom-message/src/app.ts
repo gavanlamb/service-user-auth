@@ -36,13 +36,113 @@ export const handler = async (
     "Event received for:%s",
     event.triggerSource
   )
-
-  const baseUrl = await getDefaultUri(event.callerContext.clientId, event.userPoolId);
   const dynamoRecord = await getMessageTemplateOrDefault(event.triggerSource, 'default');
+  const baseUrl = await getDefaultUri(event.callerContext.clientId, event.userPoolId);
 
-  event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, baseUrl, event);
-  event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, baseUrl, event);
-  event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, baseUrl, event);
+  switch (event.triggerSource){
+    case "CustomMessage_SignUp":
+    case "CustomMessage_ResendCode":{
+      const emailTemplateData = {
+        sub: event.request.userAttributes.sub,
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        email: event.request.userAttributes.email,
+        code: event.request.codeParameter,
+        url: `${baseUrl}/auth/verify?code=${event.request.codeParameter}&sub=${event.userName}`
+      }
+      event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
+
+      const smsAndEmailSubjectTemplateData = {
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        code: event.request.codeParameter,
+      }
+      event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
+      event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsAndEmailSubjectTemplateData);
+      break;
+    }
+    case "CustomMessage_UpdateUserAttribute":
+    case "CustomMessage_VerifyUserAttribute":{
+      const emailTemplateData = {
+        sub: event.request.userAttributes.sub,
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        email: event.request.userAttributes.email,
+        code: event.request.codeParameter,
+        url: `${baseUrl}/auth/verify?code=${event.request.codeParameter}&sub=${event.userName}`
+      }
+      event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
+
+      const smsAndEmailSubjectTemplateData = {
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        code: event.request.codeParameter,
+      }
+      event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
+      event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsAndEmailSubjectTemplateData);
+      break;
+    }
+    case "CustomMessage_AdminCreateUser":{
+      const emailTemplateData = {
+        sub: event.request.userAttributes.sub,
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        email: event.request.userAttributes.email,
+        code: event.request.codeParameter,
+        url: `${baseUrl}/auth/login`
+      }
+      event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
+
+      const smsAndEmailSubjectTemplateData = {
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        code: event.request.codeParameter,
+      }
+      event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
+      event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsAndEmailSubjectTemplateData);
+      break;
+    }
+    case "CustomMessage_ForgotPassword":{
+      const emailTemplateData = {
+        sub: event.request.userAttributes.sub,
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        email: event.request.userAttributes.email,
+        code: event.request.codeParameter,
+        url: `${baseUrl}/auth/reset-password?code=${event.request.codeParameter}&sub=${event.userName}`
+      }
+      event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
+
+      const smsAndEmailSubjectTemplateData = {
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        code: event.request.codeParameter,
+      }
+      event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
+      event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsAndEmailSubjectTemplateData);
+      break;
+    }
+    case "CustomMessage_Authentication":{
+      const emailTemplateData = {
+        sub: event.request.userAttributes.sub,
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        email: event.request.userAttributes.email,
+        code: event.request.codeParameter,
+        url: `${baseUrl}/auth/mfa?code=${event.request.codeParameter}&sub=${event.userName}`
+      }
+      event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
+
+      const smsAndEmailSubjectTemplateData = {
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        code: event.request.codeParameter,
+      }
+      event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
+      event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsAndEmailSubjectTemplateData);
+      break;
+    }
+  }
 
   logger.debug(
     {
