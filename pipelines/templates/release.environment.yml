@@ -22,7 +22,7 @@ jobs:
       - template: aws/terraform/plan.yml@templates
         parameters:
           artifactName: ${{ parameters.environment }}_${{ parameters.region }}
-          planAdditionalCommandOptions: '-var-file=variables/${{ parameters.environment }}.${{ parameters.region }}.tfvars'
+          planAdditionalCommandOptions: '-var-file=variables/${{ parameters.environment }}.${{ parameters.region }}.tfvars -var="lambda_version=$(Build.BuildNumber)"'
           serviceConnectionName: ${{ parameters.serviceConnectionName }}
           stateBucketName: ${{ parameters.stateBucketName }}
           stateLockTableName: ${{ parameters.stateLockTableName }}
@@ -32,15 +32,16 @@ jobs:
       dependsOn: plan
       timeoutInMinutes: 60
       notifyUsers: '[Expensely]\Expensely Team'
-  - deployment: apply
-    displayName: Apply
+  - deployment: deploy
+    displayName: Deploy
     dependsOn: approve
     environment: ${{ parameters.environment }}
     strategy:
       runOnce:
         deploy:
           steps:
-            - download: none
+            - download: current
+              artifact: custom-message
             - template: aws/terraform/apply.yml@templates
               parameters:
                 artifactName: ${{ parameters.environment }}_${{ parameters.region }}

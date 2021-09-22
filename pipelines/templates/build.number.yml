@@ -1,0 +1,4 @@
+steps:
+  - checkout: none
+  - script: echo "##vso[build.updatebuildnumber]1.0.$(build.buildid)-$(System.StageAttempt)"
+    displayName: Set build identifier

@@ -19,7 +19,7 @@ parameters:
 jobs:
   - job: add_cognito_users
     displayName: Add cognito users
-    dependsOn: apply
+    dependsOn: deploy
     steps:
       - task: CloudFormationCreateOrUpdateStack@1
         displayName: Add cognito users

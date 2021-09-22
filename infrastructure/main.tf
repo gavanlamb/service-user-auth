@@ -35,11 +35,11 @@
       max_length = 100
     }
   }
-  
+
   admin_create_user_config {
     allow_admin_create_user_only = false
   }
-  
+
   password_policy {
     minimum_length = 9
     require_lowercase = true
@@ -49,11 +49,12 @@
     temporary_password_validity_days = 1
   }
 
-  auto_verified_attributes = ["email"]
-  
+  auto_verified_attributes = [
+    "email"]
+
   account_recovery_setting {
     recovery_mechanism {
-      name     = "verified_email"
+      name = "verified_email"
       priority = 1
     }
   }
@@ -66,7 +67,7 @@
   username_configuration {
     case_sensitive = false
   }
-  
+
   email_configuration {
     email_sending_account = "DEVELOPER"
     source_arn = "arn:aws:ses:us-east-1:${data.aws_caller_identity.current.id}:identity/${var.cognito_from_email_address}"
@@ -74,13 +75,10 @@
     from_email_address = "Expensely No-Reply <${var.cognito_from_email_address}>"
     reply_to_email_address = var.cognito_from_email_address
   }
-  verification_message_template {
-    default_email_option = "CONFIRM_WITH_CODE"
-    email_subject = "Verify your Expensely account"
-    email_message = "Your verification code is {####}. "
-  }
 
-  tags = local.default_tags
+  lambda_config {
+    custom_message = aws_lambda_function.custom_message.qualified_arn
+  }
 }
 
 resource "aws_cognito_user_pool_domain" "expensely" {
@@ -104,5 +102,121 @@ data "aws_acm_certificate" "wildcard" {
   provider = aws.us-east-1
 
   domain = var.cognito_client_app_domain
-  statuses = ["ISSUED"]
+  statuses = [
+    "ISSUED"]
+}
+
+
+// Custom message
+/// Lambda
+resource "aws_lambda_function" "custom_message" {
+  filename = local.custom_message_filename
+  function_name = local.custom_message_name
+  role = aws_iam_role.custom_message.arn
+  handler = "app.handler"
+  runtime = "nodejs14.x"
+  memory_size = 512
+  publish = true
+  timeout = 60
+  environment {
+    variables = {
+      ENVIRONMENT = var.environment
+      PACKAGE_VERSION = var.lambda_version
+      TABLE_NAME = aws_dynamodb_table.custom_message.name
+      SERVICE_NAME = "Cognito custom message Lambda"
+      LOG_LEVEL = var.custom_message_log_level
+      DEFAULT_URI = var.custom_message_default_uri
+    }
+  }
+}
+resource "aws_lambda_permission" "custom_message" {
+  principal = "cognito-idp.amazonaws.com"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.custom_message.function_name
+  source_arn = aws_cognito_user_pool.expensely.arn
+  qualifier = aws_lambda_function.custom_message.version
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_iam_role" "custom_message" {
+  name = local.custom_message_name
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+resource "aws_iam_role_policy_attachment" "custom_message_cloudwatch" {
+  role = aws_iam_role.custom_message.name
+  policy_arn = aws_iam_policy.lambda_cloudwatch.arn
+}
+resource "aws_iam_role_policy_attachment" "custom_message_cognito" {
+  role = aws_iam_role.custom_message.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoReadOnly"
+}
+
+resource "aws_cloudwatch_log_group" "custom_message" {
+  name = "/aws/lambda/${aws_lambda_function.custom_message.function_name}"
+  retention_in_days = 14
+}
+
+/// DynamoDB
+resource "aws_dynamodb_table" "custom_message" {
+  name = local.custom_message_name
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "Organisation"
+  range_key = "MessageType"
+
+  attribute {
+    name = "MessageType"
+    type = "S"
+  }
+
+  attribute {
+    name = "Organisation"
+    type = "S"
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+resource "aws_iam_role_policy_attachment" "custom_message_dynamodb" {
+  role = aws_iam_role.custom_message.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess"
+}
+
+// Cloudwatch
+resource "aws_iam_policy" "lambda_cloudwatch" {
+  name = "xact-processor-lambda-logging-${var.environment}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*",
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
 }
