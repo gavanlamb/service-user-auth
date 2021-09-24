@@ -89,7 +89,8 @@ export const handler = async (
         familyName: event.request.userAttributes.given_name,
         email: event.request.userAttributes.email,
         code: event.request.codeParameter,
-        url: `${baseUrl}/auth/login`
+        url: `${baseUrl}/auth/login`,
+        username: event.request.usernameParameter
       }
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
