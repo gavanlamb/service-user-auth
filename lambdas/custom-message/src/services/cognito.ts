@@ -22,22 +22,35 @@ const getDefaultUri = async (
     ClientId: clientId,
     UserPoolId: userPoolId
   };
-  const userPoolClient = await client.describeUserPoolClient(params).promise();
-  const defaultUri: string = userPoolClient.UserPoolClient?.DefaultRedirectURI ?? process.env.DEFAULT_URI as string;
 
-  logger.debug(
-    {
+  try {
+    const userPoolClient = await client.describeUserPoolClient(params).promise();
+    const defaultUri: string = userPoolClient.UserPoolClient?.DefaultRedirectURI ?? process.env.DEFAULT_URI as string;
+
+    logger.debug(
+      {
+        clientId,
+        userPoolId,
+        template: "Returning default URI:%s for user pool:%s and client id:%s"
+      },
+      "Returning default URI:%s for user pool:%s and client id:%s",
+      defaultUri,
       clientId,
-      userPoolId,
-      template: "Returning default URI:%s for user pool:%s and client id:%s"
-    },
-    "Returning default URI:%s for user pool:%s and client id:%s",
-    defaultUri,
-    clientId,
-    userPoolId
-  )
+      userPoolId
+    )
 
-  return defaultUri;
+    return defaultUri;
+  } catch(error) {
+    logger.error(
+      {
+        error,
+        clientId,
+        userPoolId
+      },
+      "Failed to retrieve userpool client:%s default URL",
+      clientId);
+  }
+  return process.env.DEFAULT_URI as string;
 }
 
 export { getDefaultUri }
