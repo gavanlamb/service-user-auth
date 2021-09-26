@@ -137,8 +137,7 @@ export const handler = async (
         givenName: event.request.userAttributes.given_name,
         familyName: event.request.userAttributes.given_name,
         email: event.request.userAttributes.email,
-        code: event.request.codeParameter,
-        url: `${baseUrl}/auth/mfa?code=${event.request.codeParameter}&sub=${event.userName}`
+        code: event.request.codeParameter
       }
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
