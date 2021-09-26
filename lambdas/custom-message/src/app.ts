@@ -83,24 +83,32 @@ export const handler = async (
       break;
     }
     case "CustomMessage_AdminCreateUser":{
+      const url = `${baseUrl}/auth/login`;
       const emailTemplateData = {
         sub: event.request.userAttributes.sub,
         givenName: event.request.userAttributes.given_name,
         familyName: event.request.userAttributes.given_name,
         email: event.request.userAttributes.email,
         code: event.request.codeParameter,
-        url: `${baseUrl}/auth/login`,
+        url,
         username: event.request.usernameParameter
       }
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
-      const smsAndEmailSubjectTemplateData = {
+      const smsTemplateData = {
         givenName: event.request.userAttributes.given_name,
         familyName: event.request.userAttributes.given_name,
         code: event.request.codeParameter,
+        url,
       }
-      event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
-      event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsAndEmailSubjectTemplateData);
+      event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsTemplateData);
+
+      const emailSubjectTemplateData = {
+        givenName: event.request.userAttributes.given_name,
+        familyName: event.request.userAttributes.given_name,
+        code: event.request.codeParameter
+      }
+      event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, emailSubjectTemplateData);
       break;
     }
     case "CustomMessage_ForgotPassword":{
