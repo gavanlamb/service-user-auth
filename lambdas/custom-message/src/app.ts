@@ -43,18 +43,18 @@ export const handler = async (
     case "CustomMessage_SignUp":
     case "CustomMessage_ResendCode":{
       const emailTemplateData = {
-        sub: event.request.userAttributes.sub,
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        userId: event.request.userAttributes.sub,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         email: event.request.userAttributes.email,
         code: event.request.codeParameter,
-        url: `${baseUrl}/auth/verify?code=${event.request.codeParameter}&sub=${event.userName}`
+        url: `${baseUrl}/auth/verify?code=${event.request.codeParameter}&user-id=${event.request.userAttributes.sub}`
       }
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
       const smsAndEmailSubjectTemplateData = {
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         code: event.request.codeParameter,
       }
       event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
@@ -64,18 +64,18 @@ export const handler = async (
     case "CustomMessage_UpdateUserAttribute":
     case "CustomMessage_VerifyUserAttribute":{
       const emailTemplateData = {
-        sub: event.request.userAttributes.sub,
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        userId: event.request.userAttributes.sub,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         email: event.request.userAttributes.email,
         code: event.request.codeParameter,
-        url: `${baseUrl}/auth/verify?code=${event.request.codeParameter}&sub=${event.userName}`
+        url: `${baseUrl}/auth/verify?code=${event.request.codeParameter}&user-id=${event.request.userAttributes.sub}`
       }
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
       const smsAndEmailSubjectTemplateData = {
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         code: event.request.codeParameter,
       }
       event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
@@ -85,9 +85,9 @@ export const handler = async (
     case "CustomMessage_AdminCreateUser":{
       const url = `${baseUrl}/auth/login`;
       const emailTemplateData = {
-        sub: event.request.userAttributes.sub,
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        userId: event.request.userAttributes.sub,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         email: event.request.userAttributes.email,
         code: event.request.codeParameter,
         url,
@@ -96,16 +96,16 @@ export const handler = async (
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
       const smsTemplateData = {
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         code: event.request.codeParameter,
         url,
       }
       event.response.smsMessage = applyTemplate(dynamoRecord.SmsTemplate, smsTemplateData);
 
       const emailSubjectTemplateData = {
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         code: event.request.codeParameter
       }
       event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, emailSubjectTemplateData);
@@ -113,18 +113,18 @@ export const handler = async (
     }
     case "CustomMessage_ForgotPassword":{
       const emailTemplateData = {
-        sub: event.request.userAttributes.sub,
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        userId: event.request.userAttributes.sub,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         email: event.request.userAttributes.email,
         code: event.request.codeParameter,
-        url: `${baseUrl}/auth/reset-password?code=${event.request.codeParameter}&sub=${event.userName}`
+        url: `${baseUrl}/auth/reset-password?code=${event.request.codeParameter}&user-id=${event.request.userAttributes.sub}`
       }
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
       const smsAndEmailSubjectTemplateData = {
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         code: event.request.codeParameter,
       }
       event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
@@ -133,17 +133,17 @@ export const handler = async (
     }
     case "CustomMessage_Authentication":{
       const emailTemplateData = {
-        sub: event.request.userAttributes.sub,
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        userId: event.request.userAttributes.sub,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         email: event.request.userAttributes.email,
         code: event.request.codeParameter
       }
       event.response.emailMessage = applyTemplate(dynamoRecord.EmailTemplate, emailTemplateData);
 
       const smsAndEmailSubjectTemplateData = {
-        givenName: event.request.userAttributes.given_name,
-        familyName: event.request.userAttributes.given_name,
+        firstName: event.request.userAttributes.given_name,
+        lastName: event.request.userAttributes.family_name,
         code: event.request.codeParameter,
       }
       event.response.emailSubject = applyTemplate(dynamoRecord.EmailSubject, smsAndEmailSubjectTemplateData);
