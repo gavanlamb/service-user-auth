@@ -37,9 +37,9 @@ const getMessageTemplateOrDefault = async (
       {
         messageType,
         organisation,
-        template: "Template found for message:%s and organisation:%s"
+        template: "Found template for message:%s and organisation:%s"
       },
-      "Template found for message:%s and organisation:%s",
+      "Found template for message:%s and organisation:%s",
       messageType,
       organisation);
 
