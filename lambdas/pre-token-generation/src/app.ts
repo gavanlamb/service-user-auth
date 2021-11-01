@@ -3,6 +3,7 @@ import {
   PreTokenGenerationTriggerHandler
 } from "aws-lambda";
 import logger from "./utils/logger";
+import {getDefaultUri} from "./services/cognito";
 
 
 export const handler:PreTokenGenerationTriggerHandler = async (
@@ -16,6 +17,8 @@ export const handler:PreTokenGenerationTriggerHandler = async (
     "Event received for:%s",
     event.triggerSource
   )
+
+  await getDefaultUri(event.callerContext.clientId, event.userPoolId);
 
   logger.debug(
     {

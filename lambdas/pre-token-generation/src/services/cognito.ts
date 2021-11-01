@@ -25,6 +25,12 @@ const getDefaultUri = async (
 
   try {
     const userPoolClient = await client.describeUserPoolClient(params).promise();
+    logger.debug(
+      {
+        userPoolClient
+      },
+      "User pool client details"
+    )
     const defaultUri: string = userPoolClient.UserPoolClient?.DefaultRedirectURI ?? process.env.DEFAULT_URI as string;
 
     logger.debug(
