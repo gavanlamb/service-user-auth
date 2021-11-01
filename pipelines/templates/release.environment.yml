@@ -42,6 +42,8 @@ jobs:
           steps:
             - download: current
               artifact: custom-message
+            - download: current
+              artifact: pre-token-generation
             - template: aws/terraform/apply.yml@templates
               parameters:
                 artifactName: ${{ parameters.environment }}_${{ parameters.region }}

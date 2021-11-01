@@ -40,6 +40,15 @@ stages:
             parameters:
               lambdaName: custom-message
 
+      - job: pre_token_generation
+        displayName: Pre token generation
+        dependsOn: setup
+        steps:
+          - template: templates/build.lambda.yml
+            parameters:
+              lambdaName: pre-token-generation
+
+
   - stage: preview
     displayName: Preview
     dependsOn:
