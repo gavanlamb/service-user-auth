@@ -106,6 +106,28 @@ data "aws_acm_certificate" "wildcard" {
     "ISSUED"]
 }
 
+// Cloudwatch
+resource "aws_iam_policy" "lambda_cloudwatch" {
+  name = "xact-processor-lambda-logging-${var.environment}"
+  description = "IAM policy for logging from a lambda"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "arn:aws:logs:*:*:*",
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
 
 // Custom message
 /// Lambda
@@ -198,25 +220,66 @@ resource "aws_iam_role_policy_attachment" "custom_message_dynamodb" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess"
 }
 
-// Cloudwatch
-resource "aws_iam_policy" "lambda_cloudwatch" {
-  name = "xact-processor-lambda-logging-${var.environment}"
-  description = "IAM policy for logging from a lambda"
 
-  policy = <<EOF
+// Custom message
+/// Lambda
+resource "aws_lambda_function" "pre_token_generation" {
+  filename = local.pre_token_generation_filename
+  function_name = local.pre_token_generation_name
+  role = aws_iam_role.pre_token_generation.arn
+  handler = "app.handler"
+  runtime = "nodejs14.x"
+  memory_size = 512
+  publish = true
+  timeout = 60
+  environment {
+    variables = {
+      ENVIRONMENT = var.environment
+      PACKAGE_VERSION = var.lambda_version
+      SERVICE_NAME = "Cognito pre token generation Lambda"
+      LOG_LEVEL = var.pre_token_generation_log_level
+    }
+  }
+}
+resource "aws_lambda_permission" "pre_token_generation" {
+  principal = "cognito-idp.amazonaws.com"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pre_token_generation.function_name
+  source_arn = aws_cognito_user_pool.expensely.arn
+  qualifier = aws_lambda_function.pre_token_generation.version
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_iam_role" "pre_token_generation" {
+  name = local.pre_token_generation_name
+
+  assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": "arn:aws:logs:*:*:*",
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
       "Effect": "Allow"
     }
   ]
 }
 EOF
+}
+resource "aws_iam_role_policy_attachment" "pre_token_generation" {
+  role = aws_iam_role.pre_token_generation.name
+  policy_arn = aws_iam_policy.lambda_cloudwatch.arn
+}
+resource "aws_iam_role_policy_attachment" "pre_token_generation" {
+  role = aws_iam_role.pre_token_generation.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoReadOnly"
+}
+
+resource "aws_cloudwatch_log_group" "pre_token_generation" {
+  name = "/aws/lambda/${aws_lambda_function.pre_token_generation.function_name}"
+  retention_in_days = 14
 }
