@@ -78,6 +78,7 @@
 
   lambda_config {
     custom_message = aws_lambda_function.custom_message.qualified_arn
+    pre_token_generation = aws_lambda_function.pre_token_generation.qualified_arn
   }
 }
 
@@ -96,14 +97,6 @@ resource "aws_route53_record" "auth" {
     name = aws_cognito_user_pool_domain.expensely.cloudfront_distribution_arn
     zone_id = "Z2FDTNDATAQYW2"
   }
-}
-
-data "aws_acm_certificate" "wildcard" {
-  provider = aws.us-east-1
-
-  domain = var.cognito_client_app_domain
-  statuses = [
-    "ISSUED"]
 }
 
 // Cloudwatch
@@ -220,8 +213,7 @@ resource "aws_iam_role_policy_attachment" "custom_message_dynamodb" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess"
 }
 
-
-// Custom message
+// Pre token generation
 /// Lambda
 resource "aws_lambda_function" "pre_token_generation" {
   filename = local.pre_token_generation_filename
