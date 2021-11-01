@@ -270,11 +270,11 @@ resource "aws_iam_role" "pre_token_generation" {
 }
 EOF
 }
-resource "aws_iam_role_policy_attachment" "pre_token_generation" {
+resource "aws_iam_role_policy_attachment" "pre_token_generation_cloudwatch" {
   role = aws_iam_role.pre_token_generation.name
   policy_arn = aws_iam_policy.lambda_cloudwatch.arn
 }
-resource "aws_iam_role_policy_attachment" "pre_token_generation" {
+resource "aws_iam_role_policy_attachment" "pre_token_generation_cognito" {
   role = aws_iam_role.pre_token_generation.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonCognitoReadOnly"
 }
