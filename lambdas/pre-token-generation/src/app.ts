@@ -3,7 +3,7 @@ import {
   PreTokenGenerationTriggerHandler
 } from "aws-lambda";
 import logger from "./utils/logger";
-import {getDefaultUri} from "./services/cognito";
+import { getClientScopes } from "./services/cognito";
 
 
 export const handler:PreTokenGenerationTriggerHandler = async (
@@ -18,7 +18,12 @@ export const handler:PreTokenGenerationTriggerHandler = async (
     event.triggerSource
   )
 
-  await getDefaultUri(event.callerContext.clientId, event.userPoolId);
+  const scopes = await getClientScopes(event.callerContext.clientId, event.userPoolId);
+  event.response.claimsOverrideDetails = {
+      claimsToAddOrOverride: {
+          scope: scopes
+      }
+  }
 
   logger.debug(
     {

@@ -3,7 +3,7 @@ import {DescribeUserPoolClientRequest} from "aws-sdk/clients/cognitoidentityserv
 import logger from "../utils/logger";
 
 
-const getDefaultUri = async (
+const getClientScopes = async (
   clientId: string,
   userPoolId: string): Promise<string> => {
   logger.debug(
@@ -25,27 +25,21 @@ const getDefaultUri = async (
 
   try {
     const userPoolClient = await client.describeUserPoolClient(params).promise();
-    logger.debug(
-      {
-        userPoolClient
-      },
-      "User pool client details"
-    )
-    const defaultUri: string = userPoolClient.UserPoolClient?.DefaultRedirectURI ?? process.env.DEFAULT_URI as string;
+    const scopes = userPoolClient.UserPoolClient?.AllowedOAuthScopes?.join(" ") ?? "";
 
     logger.debug(
       {
         clientId,
         userPoolId,
-        template: "Returning default URI:%s for user pool:%s and client id:%s"
+        template: "Returning scopes:%s for user pool:%s and client id:%s"
       },
       "Returning default URI:%s for user pool:%s and client id:%s",
-      defaultUri,
+      scopes,
       clientId,
       userPoolId
     )
 
-    return defaultUri;
+    return scopes;
   } catch(error) {
     logger.error(
       {
@@ -53,10 +47,10 @@ const getDefaultUri = async (
         clientId,
         userPoolId
       },
-      "Failed to retrieve userpool client:%s default URI",
+      "Failed to retrieve user pool client:%s scopes",
       clientId);
   }
   return process.env.DEFAULT_URI as string;
 }
 
-export { getDefaultUri }
+export { getClientScopes }

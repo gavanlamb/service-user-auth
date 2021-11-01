@@ -47,7 +47,7 @@ const getDefaultUri = async (
         clientId,
         userPoolId
       },
-      "Failed to retrieve userpool client:%s default URI",
+      "Failed to retrieve user pool client:%s default URI",
       clientId);
   }
   return process.env.DEFAULT_URI as string;
