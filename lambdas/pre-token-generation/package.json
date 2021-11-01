@@ -1,0 +1,47 @@
+{
+  "name": "pre-token-generation",
+  "version": "1.0.0",
+  "description": "Lambda to update values pre token generation",
+  "main": "app.js",
+  "keywords": [
+    "Lambda",
+    "AWS",
+    "Cognito",
+    "TypeScript",
+    "Pre Token Generation"
+  ],
+  "author": "Gavan Lamb",
+  "license": "GPL-3.0",
+  "scripts": {
+    "clean": "rimraf dist && rimraf webpack",
+    "prebuild": "npm run updateVersion && npm run clean && npm run pretty && npm run lint && tsc --version",
+    "build": "npm run clean && tsc --pretty",
+    "postbuild": "webpack",
+    "pretty": "prettier --write \"./**/*.{ts,tsx,json}\"",
+    "lint": "tslint --force --format verbose \"src/**/*.ts\"",
+    "updateVersion": "npm version $BUILD_NUMBER"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.6",
+    "aws-sdk": "^2.808.0",
+    "pino": "^6.9.0",
+    "pino-lambda": "^1.1.5",
+    "typescript": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.66",
+    "@types/aws-sdk": "^2.7.0",
+    "@types/node": "^12.12.6",
+    "@types/pino": "^6.3.4",
+    "@types/sharp": "^0.28.0",
+    "prettier": "1.19.1",
+    "rimraf": "^3.0.2",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "webpack": "^5.10.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-node-externals": "^2.5.2",
+    "copy-webpack-plugin": "^8.1.1",
+    "zip-webpack-plugin": "^3.0.0"
+  }
+}
