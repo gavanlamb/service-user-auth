@@ -1,19 +1,16 @@
 parameters:
-  - name: serviceConnectionName
-    displayName: Name of the AWS service connection to use
-    type: string
-  - name: region
-    displayName: Name of the AWS region
-    type: string
-  - name: environment
-    displayName: Name of the environment
+  - name: cognitoUserPoolId
+    displayName: ID of the cognito user pool
     type: string
   - name: domain
     displayName: Name of domain to create users for
     type: string
     default: expensely.io
-  - name: cognitoUserPoolId
-    displayName: ID of the cognito user pool
+  - name: environment
+    displayName: Name of the environment
+    type: string
+  - name: region
+    displayName: Name of the AWS region
     type: string
 
 jobs:
@@ -21,23 +18,14 @@ jobs:
     displayName: Add cognito users
     dependsOn: deploy
     steps:
-      - task: CloudFormationCreateOrUpdateStack@1
+      - template: aws/iam/configure.yml@templates
+      - task: PowerShell@2
         displayName: Add cognito users
         inputs:
-          awsCredentials: '${{ parameters.serviceConnectionName }}'
-          regionName: '${{ parameters.region }}'
-          stackName: 'expensely-${{ parameters.environment }}-cognito-users'
-          templateSource: 'file'
-          templateFile: '$(Build.SourcesDirectory)/infrastructure/users.yaml'
-          templateParametersSource: 'inline'
-          templateParameters: |
-            [
-              {
-                "ParameterKey":"CognitoUserPoolId",
-                "ParameterValue":"${{ parameters.cognitoUserPoolId }}"
-              },
-              {
-                "ParameterKey":"Domain",
-                "ParameterValue":"${{ parameters.domain }}"
-              }
-            ]
+          targetType: inline
+          script: |
+            aws cloudformation deploy --template-file users.yaml --stack-name expensely-${{ parameters.environment }}-cognito-users --parameter-overrides CognitoUserPoolId=${{ parameters.cognitoUserPoolId }} Domain=${{ parameters.domain }} --region ${{ parameters.awsRegion }}
+          errorActionPreference: stop
+          showWarnings: true
+          pwsh: true
+          workingDirectory: $(Build.SourcesDirectory)/infrastructure

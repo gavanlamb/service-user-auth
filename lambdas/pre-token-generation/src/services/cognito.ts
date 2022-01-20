@@ -10,9 +10,9 @@ const getClientScopes = async (
     {
       clientId,
       userPoolId,
-      template: "Getting default URI for user pool:%s and client id:%s"
+      template: "Getting client scopes for user pool:%s and client id:%s"
     },
-    "Getting default URI for user pool:%s and client id:%s",
+    "Getting client scopes for user pool:%s and client id:%s",
     clientId,
     userPoolId
   )
@@ -33,7 +33,7 @@ const getClientScopes = async (
         userPoolId,
         template: "Returning scopes:%s for user pool:%s and client id:%s"
       },
-      "Returning default URI:%s for user pool:%s and client id:%s",
+      "Returning scopes:%s for user pool:%s and client id:%s",
       scopes,
       clientId,
       userPoolId
@@ -50,7 +50,7 @@ const getClientScopes = async (
       "Failed to retrieve user pool client:%s scopes",
       clientId);
   }
-  return process.env.DEFAULT_URI as string;
+  return "";
 }
 
 export { getClientScopes }

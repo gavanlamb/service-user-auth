@@ -20,9 +20,10 @@ export const handler:PreTokenGenerationTriggerHandler = async (
 
   const scopes = await getClientScopes(event.callerContext.clientId, event.userPoolId);
   event.response.claimsOverrideDetails = {
-      claimsToAddOrOverride: {
-          scope: scopes
-      }
+    claimsToAddOrOverride: {
+      scope: scopes,
+      ping: "pong"
+    }
   }
 
   logger.debug(
