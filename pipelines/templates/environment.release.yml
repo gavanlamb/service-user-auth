@@ -1,0 +1,51 @@
+﻿parameters:
+  - name: environment
+    displayName: Name of the environment to deploy to
+    type: string
+  - name: onTimeout
+    displayName: Action to take on timeout
+    type: string
+    default: reject
+    values:
+      - reject
+      - resume
+  - name: region
+    displayName: Name of AWS region to deploy into
+    type: string
+  - name: timeoutInMinutes
+    displayName: Number of minutes until this job times out
+    type: number
+    default: 60
+
+jobs:
+  - job: plan
+    displayName: Plan
+    steps:
+      - template: aws/iam/configure.yml@templates
+      - template: terraform/plan.yml@templates
+        parameters:
+          artifactName: terraform.${{ parameters.environment }}.${{ parameters.region }}
+          planAdditionalCommandOptions: '-var-file="variables/${{ parameters.environment }}.${{ parameters.region }}.tfvars" -var="lambda_version=$(Build.BuildNumber)"'
+          workspaceName: service-user-auth-${{ parameters.environment }}
+
+  - template: azure-devops/approve.yml@templates
+    parameters:
+      dependsOn: plan
+      onTimeout: ${{ parameters.onTimeout }}
+      timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+      userToNotify: '[Expensely]\Expensely Team'
+
+  - deployment: apply
+    displayName: Apply
+    dependsOn: approve
+    environment: ${{ parameters.environment }}
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: current
+              artifact: custom-message
+            - template: aws/iam/configure.yml@templates
+            - template: terraform/apply.yml@templates
+              parameters:
+                artifactName: terraform.${{ parameters.environment }}.${{ parameters.region }}
