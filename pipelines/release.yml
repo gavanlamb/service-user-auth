@@ -49,6 +49,61 @@ stages:
       - template: templates/cognito.add-users.yml
         parameters:
           environment: ${{ variables.ENVIRONMENT }}
+          fileName: users
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users1
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users2
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users3
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users4
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users5
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users6
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users7
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users8
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users9
           region: ${{ variables.REGION }}
           cognitoUserPoolId: ap-southeast-2_Z3MVGn7hg
 
@@ -66,5 +121,60 @@ stages:
       - template: templates/cognito.add-users.yml
         parameters:
           environment: ${{ variables.ENVIRONMENT }}
+          fileName: users
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users1
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users2
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users3
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users4
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users5
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users6
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users7
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users8
+          region: ${{ variables.REGION }}
+          cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF
+      - template: templates/cognito.add-users.yml
+        parameters:
+          environment: ${{ variables.ENVIRONMENT }}
+          fileName: users9
           region: ${{ variables.REGION }}
           cognitoUserPoolId: ap-southeast-2_Zm4YXy0JF

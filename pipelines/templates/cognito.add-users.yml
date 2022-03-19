@@ -12,10 +12,13 @@ parameters:
   - name: region
     displayName: Name of the AWS region
     type: string
+  - name: fileName
+    displayName: Name of the CFN file to apply
+    type: string
 
 jobs:
   - job: add_cognito_users
-    displayName: Add cognito users
+    displayName: Add cognito ${{ parameters.fileName }}
     dependsOn: apply
     steps:
       - template: aws/iam/configure.yml@templates
@@ -24,7 +27,7 @@ jobs:
         inputs:
           targetType: inline
           script: |
-            aws cloudformation deploy --template-file users.yaml --stack-name expensely-${{ parameters.environment }}-cognito-users --parameter-overrides CognitoUserPoolId=${{ parameters.cognitoUserPoolId }} Domain=${{ parameters.domain }} --region ${{ parameters.region }}
+            aws cloudformation deploy --template-file ${{ parameters.fileName }}.yaml --stack-name expensely-${{ parameters.environment }}-cognito-${{ parameters.fileName }} --parameter-overrides CognitoUserPoolId=${{ parameters.cognitoUserPoolId }} Domain=${{ parameters.domain }} --region ${{ parameters.region }}
           errorActionPreference: stop
           showWarnings: true
           pwsh: true
