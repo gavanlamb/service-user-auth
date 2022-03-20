@@ -17,7 +17,7 @@ parameters:
     type: string
 
 jobs:
-  - job: add_cognito_users
+  - job: add_cognito_${{ parameters.fileName }}
     displayName: Add cognito ${{ parameters.fileName }}
     dependsOn: apply
     steps:
