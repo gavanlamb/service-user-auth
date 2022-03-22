@@ -2008,4 +2008,4 @@ Resources:
     - Name: phone_number_verified
       Value: true
    Username: !Sub user199@${Domain}
-   UserPoolId: !Ref CognitoUserPoolI
+   UserPoolId: !Ref CognitoUserPoolId
