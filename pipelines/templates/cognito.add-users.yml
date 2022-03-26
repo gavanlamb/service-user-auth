@@ -1,4 +1,8 @@
 parameters:
+  - name: awsRegion
+    displayName: AWS region to push image to
+    type: string
+    default: $(REGION)
   - name: cognitoUserPoolId
     displayName: ID of the cognito user pool
     type: string
@@ -6,28 +10,37 @@ parameters:
     displayName: Name of domain to create users for
     type: string
     default: expensely.io
-  - name: environment
-    displayName: Name of the environment
-    type: string
   - name: region
     displayName: Name of the AWS region
     type: string
-  - name: fileName
-    displayName: Name of the CFN file to apply
-    type: string
 
 jobs:
-  - job: add_cognito_${{ parameters.fileName }}
-    displayName: Add cognito ${{ parameters.fileName }}
+  - job: add_cognito_users
+    displayName: Add cognito users
     dependsOn: apply
+    timeoutInMinutes: 360
     steps:
       - template: aws/iam/configure.yml@templates
       - task: PowerShell@2
         displayName: Add cognito users
+        timeoutInMinutes: 360
         inputs:
           targetType: inline
           script: |
-            aws cloudformation deploy --template-file ${{ parameters.fileName }}.yaml --stack-name expensely-${{ parameters.environment }}-cognito-${{ parameters.fileName }} --parameter-overrides CognitoUserPoolId=${{ parameters.cognitoUserPoolId }} Domain=${{ parameters.domain }} --region ${{ parameters.region }}
+            $userDetails = (Invoke-WebRequest -URI "https://randomuser.me/api/?inc=name&results=3000&noinfo&nat=au/").Content | ConvertFrom-Json
+            for ($i = 0; $i -lt 3000; $i++)
+            {
+              $email = "user$($i)@${{ parameters.domain }}"
+              $userId = aws cognito-idp admin-get-user --user-pool-id ${{ parameters.cognitoUserPoolId }} --username "$email" --output json --query 'Username' --region ${{ parameters.awsRegion }}
+              if($userId -eq '' -or $userId -eq $null)
+              {
+                $first = $userDetails.results[$i].name.first
+                $last = $userDetails.results[$i].name.last
+                $cognitoUser = aws cognito-idp admin-create-user --user-pool-id ${{ parameters.cognitoUserPoolId }} --username $email --user-attributes Name=given_name,Value=$first Name=family_name,Value=$last Name=email,Value=$email Name=phone_number,Value="+61406000000" Name=email_verified,Value=True Name=phone_number_verified,Value=True --message-action SUPPRESS --region ${{ parameters.awsRegion }} | ConvertFrom-Json
+                Write-Output "Created $first $last - $email"
+                aws cognito-idp admin-set-user-password --user-pool-id ${{ parameters.cognitoUserPoolId }} --username $cognitoUser.User.Username --password "Subaru88//" --permanent --region ${{ parameters.awsRegion }}
+              }              
+            }
           errorActionPreference: stop
           showWarnings: true
           pwsh: true
